@@ -18,6 +18,9 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
 
+import s3fs
+import os
+
 REPLACE_BY_SPACE_RE = re.compile('[/(){}\[\]\|@,;]')
 BAD_SYMBOLS_RE = re.compile('[^0-9a-z #+_]')
 STOPWORDS = set(stopwords.words('english'))
@@ -33,16 +36,29 @@ unwanted_words = {'no', 'nor', 'not','don', "don't",'ain', 'aren', "aren't",
  
 NEW_STOPWORDS = [ele for ele in STOPWORDS if ele not in unwanted_words]
 
+# Create connection object.
+# `anon=False` means not anonymous, i.e. it uses access keys to pull data.
+fs = s3fs.S3FileSystem(anon=False)
+
+# Retrieve file contents.
+# Uses st.cache_data to only rerun when the query changes or after 10 min.
 @st.cache_resource
-def load_model():
-    filename = 'finalized_model.sav'
+def read_file(filename):
+    with fs.open(filename) as f:
+        return f.read()
+
+loaded_model = read_file("ordsmall/finalized_model.sav")
+
+@st.cache_resource
+#def load_model():
+#    filename = 'finalized_model.sav'
 
     # Load the saved model
-    loaded_model = pickle.load(open(filename, 'rb'))
-    return loaded_model
+ #   loaded_model = pickle.load(open(filename, 'rb'))
+ #   return loaded_model
 
 # Load the model
-loaded_model = load_model()
+#loaded_model = load_model()
 
 C = loaded_model['clf'].coef_
 
