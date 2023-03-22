@@ -4,31 +4,15 @@ Created on Tue Mar 14 01:15:48 2023
 
 @author: sbhadra
 """
-import sys
-import os
 import pandas as pd
 import re
-from textblob import Word
 import numpy as np
-import csv
-import spacy
-import gensim
-from gensim.models.doc2vec import Doc2Vec, TaggedDocument
-from random import randint
+import streamlit as st
 
 import pickle
-import logging
-import pandas as pd
-import numpy as np
-from numpy import random
-import gensim
 import nltk
-from sklearn.utils import resample
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
-import re
 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -49,12 +33,9 @@ unwanted_words = {'no', 'nor', 'not','don', "don't",'ain', 'aren', "aren't",
  
 NEW_STOPWORDS = [ele for ele in STOPWORDS if ele not in unwanted_words]
 
-import streamlit as st
-import pickle
-
 @st.cache_resource
 def load_model():
-    filename = 'olr_model.sav'
+    filename = 'finalized_model.sav'
 
     # Load the saved model
     loaded_model = pickle.load(open(filename, 'rb'))
