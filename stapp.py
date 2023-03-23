@@ -49,7 +49,7 @@ def read_file(filename):
 
 loaded_model = read_file("ordsmall/finalized_model.sav")
 
-@st.cache_resource
+#@st.cache_resource
 #def load_model():
 #    filename = 'finalized_model.sav'
 
