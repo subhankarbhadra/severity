@@ -38,17 +38,20 @@ NEW_STOPWORDS = [ele for ele in STOPWORDS if ele not in unwanted_words]
 
 # Create connection object.
 # `anon=False` means not anonymous, i.e. it uses access keys to pull data.
-fs = s3fs.S3FileSystem(anon=False)
+#fs = s3fs.S3FileSystem(anon=False)
 
-print(fs.ls('ordsmall/'))
+#print(fs.ls('ordsmall/'))
 
 # Retrieve file contents.
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
+
 @st.cache_resource
 def read_file():
     filename = "s3://ordsmall/finalized_model.sav"
-    with fs.open(filename) as f:
-        return pickle.load(f)
+    loaded_model = pickle.load(open(filename, 'rb'))
+    return loaded_model
+    #with fs.open(filename) as f:
+    #    return pickle.load(f)
 
 loaded_model = read_file()
 
