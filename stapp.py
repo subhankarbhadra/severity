@@ -40,7 +40,7 @@ NEW_STOPWORDS = [ele for ele in STOPWORDS if ele not in unwanted_words]
 # `anon=False` means not anonymous, i.e. it uses access keys to pull data.
 fs = s3fs.S3FileSystem(anon=False)
 
-print(fs.ls())
+print(fs.ls('ordsmall/'))
 
 # Retrieve file contents.
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
