@@ -44,7 +44,7 @@ fs = s3fs.S3FileSystem(anon=False)
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
 @st.cache_resource
 def read_file():
-    filename = "ordsmall/finalized_model.sav"
+    filename = "s3://ordsmall/finalized_model.sav"
     with fs.open(filename) as f:
         return pickle.load(f)
 
