@@ -4,4 +4,3 @@ streamlit
 nltk
 scikit-learn
 bs4
-s3fs
