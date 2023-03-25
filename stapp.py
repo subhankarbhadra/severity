@@ -9,17 +9,19 @@ import re
 import numpy as np
 import streamlit as st
 
+import csv
 import pickle
 import nltk
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.preprocessing import normalize
 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
 
-import s3fs
-import os
+#import s3fs
+#import os
 
 REPLACE_BY_SPACE_RE = re.compile('[/(){}\[\]\|@,;]')
 BAD_SYMBOLS_RE = re.compile('[^0-9a-z #+_]')
@@ -36,24 +38,15 @@ unwanted_words = {'no', 'nor', 'not','don', "don't",'ain', 'aren', "aren't",
  
 NEW_STOPWORDS = [ele for ele in STOPWORDS if ele not in unwanted_words]
 
-# Create connection object.
-# `anon=False` means not anonymous, i.e. it uses access keys to pull data.
-#fs = s3fs.S3FileSystem(anon=False)
-
-#print(fs.ls('ordsmall/'))
-
-# Retrieve file contents.
-# Uses st.cache_data to only rerun when the query changes or after 10 min.
-
-@st.cache_resource
-def read_file():
-    filename = "s3://ordsmall/finalized_model.sav"
-    loaded_model = pickle.load(open(filename, 'rb'))
-    return loaded_model
+#@st.cache_resource
+#def read_file():
+#    filename = "s3://ordsmall/finalized_model.sav"
+#    loaded_model = pickle.load(open(filename, 'rb'))
+#    return loaded_model
     #with fs.open(filename) as f:
     #    return pickle.load(f)
 
-loaded_model = read_file()
+#loaded_model = read_file()
 
 #@st.cache_resource
 #def load_model():
@@ -66,7 +59,32 @@ loaded_model = read_file()
 # Load the model
 #loaded_model = load_model()
 
-C = loaded_model['clf'].coef_
+#C = loaded_model['clf'].coef_
+
+@st.cache_data
+def load_data():
+    filename = 'finalized_model.csv'
+
+    # Load the saved data
+    with open(filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        trained_dictionary = []
+        trained_idf = []
+        fitted_coef = []
+    
+        for row in reader:
+            trained_dictionary.append(row[0])
+            trained_idf.append(float(row[1]))
+            fitted_coef.append(float(row[2]))
+        
+    # Convert num_array to a numpy array
+    trained_idf = np.array(trained_idf)
+    fitted_coef = np.array(fitted_coef)
+    
+    return trained_dictionary, trained_idf, fitted_coef
+
+# Load the data
+trained_dictionary, trained_idf, fitted_coef = load_data()
 
 def clean_text(text):
     """
@@ -82,11 +100,17 @@ def clean_text(text):
     return text
 
 # Define the predict_severity function that takes user input and returns a prediction
-def predict_severity(text):
-    D = loaded_model['tfidf'].transform(loaded_model['vect'].transform(pd.Series(clean_text(text))))
-    Ystar = D.dot(C)
+#def predict_severity(text):
+#    D = loaded_model['tfidf'].transform(loaded_model['vect'].transform(pd.Series(clean_text(text))))
+#    Ystar = D.dot(C)
     # Use the pipeline to predict the number
     #predicted = loaded_model.predict([text])
+#    return Ystar[0]
+
+def predict_severity(text):
+    cvt = CountVectorizer(ngram_range=(1, 4), vocabulary = trained_dictionary)
+    Ystar = normalize(cvt.transform(pd.Series(clean_text(text))).multiply(trained_idf), norm = 'l2', axis = 1).dot(fitted_coef)
+    
     return Ystar[0]
 
 # Create the Streamlit app
@@ -104,9 +128,17 @@ def main():
     if user_input:
         prediction = predict_severity(user_input)
 
+        if prediction < 1.40266175:
+            category = 'Malfunction'
+        elif prediction < 9.32661975:
+            category = 'Injury'
+        else:
+            category = 'Death'
+        
         # Display the predicted severity
         st.write('Predicted Severity:', prediction)
-
+        st.write('Category:', category)
+        
 # Run the app
 if __name__ == "__main__":
     main()
