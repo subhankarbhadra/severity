@@ -19,7 +19,6 @@ from sklearn.preprocessing import normalize
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
-import lxml
 
 #import s3fs
 #import os
