@@ -63,8 +63,9 @@ NEW_STOPWORDS = [ele for ele in STOPWORDS if ele not in unwanted_words]
 
 @st.cache_data
 def load_data():
-    filename = 'finalized_model.csv'
-
+    # filename = 'finalized_model.csv'
+    filename = 'olr_model.csv'
+    
     # Load the saved data
     with open(filename, 'r') as csvfile:
         reader = csv.reader(csvfile)
