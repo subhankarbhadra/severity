@@ -11,12 +11,12 @@ import streamlit as st
 
 import csv
 import pickle
-import nltk
+#import nltk
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.preprocessing import normalize
 
-nltk.download('stopwords')
+#nltk.download('stopwords')
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
 
