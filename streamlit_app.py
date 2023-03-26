@@ -130,7 +130,7 @@ def main():
     
     # Set the title and description of the app
     st.title('Severity Calculator')
-    st.write('Please enter the patient safety event report below to predict the severity')
+    st.write('Please enter the patient safety event report below:')
 
     # Create a text box for user input
     user_input = st.text_area('Enter text here', label_visibility = "collapsed")
