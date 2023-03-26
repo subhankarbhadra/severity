@@ -157,7 +157,7 @@ def main():
         ax.axvline(x=prediction, color='blue')
         st.pyplot(ax.figure)
         
-        st.write('This is a category-wise density plot of the estimated severity scores of approx. 7.7 million reports from the MAUDE database. The black vertical lines separate the three severity levels: Malfunction, Injury, and Death. The blue vertical line represents the severity score of the report provided.') 
+        st.write('This is a category-wise density plot of the estimated severity scores of approx. 7.7 million reports from the MAUDE database. The black vertical lines separate the three severity categories: Malfunction, Injury, and Death. The blue vertical line represents the severity score of the report provided.') 
                 
         st.header('Critical phrases')
         st.write(':green[Negative: ]', neg_words, unsafe_allow_html=True)
