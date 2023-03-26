@@ -2,3 +2,9 @@ name: stats
 dependencies:
   - numpy
   - pandas
+  - streamlit
+  - nltk
+  - scikit-learn
+  - bs4
+  - lxml
+  - matplotlib
