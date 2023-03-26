@@ -79,14 +79,9 @@ def load_data():
     trained_idf = np.array(trained_idf)
     fitted_coef = np.array(fitted_coef)
     
-    with open('critwords_olr_model.csv', mode='r') as file:
-
-        csv_reader = csv.reader(file)
-        negative = []
-        positive = []
-        for row in csv_reader:
-            negative.append(row[1])
-            positive.append(row[2])
+    critwords = pd.read_csv('critwords_olr_model.csv')
+    negative = critwords['negative'].tolist()
+    positive = critwords['positive'].tolist()
             
     return trained_dictionary, trained_idf, fitted_coef, negative, positive
 
