@@ -64,20 +64,10 @@ NEW_STOPWORDS = [ele for ele in STOPWORDS if ele not in unwanted_words]
 @st.cache_data
 def load_data():
     # Load the saved data
-    with open('olr_model.csv', 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        trained_dictionary = []
-        trained_idf = []
-        fitted_coef = []
-    
-        for row in reader:
-            trained_dictionary.append(row[0])
-            trained_idf.append(float(row[1]))
-            fitted_coef.append(float(row[2]))
-        
-    # Convert num_array to a numpy array
-    trained_idf = np.array(trained_idf)
-    fitted_coef = np.array(fitted_coef)
+    olr = pd.read_csv('olr_model.csv', header = None)
+    trained_dictionary = olr.iloc[:,0].tolist()
+    trained_idf = olr.iloc[:,1].values #converting to np array
+    fitted_coef = olr.iloc[:,2].values #converting to np array
     
     critwords = pd.read_csv('critwords_olr_model.csv')
     negative = critwords['negative'].tolist()
