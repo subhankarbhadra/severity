@@ -2,7 +2,7 @@ name: stats
 dependencies:
   - numpy
   - pandas
-  - streamlit=1.20.0
+  - streamlit
   - nltk
   - scikit-learn
   - bs4
