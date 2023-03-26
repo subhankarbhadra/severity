@@ -153,7 +153,6 @@ def main():
         st.write('The predicted severity score is ', round(prediction, 2),
                  '. The event is categorized as ', category, unsafe_allow_html=True)
         
-        st.write(matplotlib.__version__)
         ax = pickle.load(open("score_plot.pickle", "rb"))
         ax.axvline(x=prediction, color='blue')
         st.pyplot(ax.figure)
