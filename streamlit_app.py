@@ -144,22 +144,26 @@ def main():
         # 1.83072462, 11.33662054 for olr_model
         if prediction < 1.83072462:
             category = f"<span style='color: green'>Malfunction.</span>"
+            description = "If the score was greater than 1.83, it would have been categorized as Injury."
         elif prediction < 11.33662054:
             category = f"<span style='color: #FFC300'>Injury.</span>"
+            description = "If the score was less than 1.83, it would have been categorized as Malfunction, and if the score was greater than 11.33, it would have been categorized as Death."
         else:
             category = f"<span style='color: red'>Death.</span>"
+            description = "If the score was less than 11.33, it would have been categorized as Injury."
         
         # Display the predicted severity
-        st.write('The predicted severity score is ', round(prediction, 2),
-                 '. The event is categorized as ', category, unsafe_allow_html=True)
+        st.write('The predicted severity score of the input report is ', round(prediction, 2),
+                 'and it is categorized as ', category, description, unsafe_allow_html=True)
         
         ax = pickle.load(open("score_plot.pickle", "rb"))
         ax.axvline(x=prediction, color='blue')
         st.pyplot(ax.figure)
         
-        st.write('This is a category-wise density plot of the estimated severity scores of approx. 7.7 million reports from the MAUDE database. The black vertical lines separate the three severity categories: Malfunction, Injury, and Death. The blue vertical line represents the severity score of the report provided.') 
+        st.write('This is a category-wise density plot of the estimated severity scores of approx. 7.7 million reports from the MAUDE database. The blue vertical line represents the severity score of the report provided.') 
                 
         st.header('Critical phrases')
+        st.write("Critical phrases are n-grams that have a high coefficient value (in magnitude) in the trained OLR model. If the fitted coefficient is negative, the critical phrase is called a 'negative' critical phrase and vice versa. The critical phrases that appeared in the (pre-processed) input report are listed below.")
         st.write(':green[Negative: ]', neg_words, unsafe_allow_html=True)
         st.write(':red[Positive: ]', pos_words, unsafe_allow_html=True)
         
