@@ -63,11 +63,8 @@ NEW_STOPWORDS = [ele for ele in STOPWORDS if ele not in unwanted_words]
 
 @st.cache_data
 def load_data():
-    # filename = 'finalized_model.csv'
-    filename = 'olr_model.csv'
-    
     # Load the saved data
-    with open(filename, 'r') as csvfile:
+    with open('olr_model.csv', 'r') as csvfile:
         reader = csv.reader(csvfile)
         trained_dictionary = []
         trained_idf = []
@@ -82,10 +79,19 @@ def load_data():
     trained_idf = np.array(trained_idf)
     fitted_coef = np.array(fitted_coef)
     
-    return trained_dictionary, trained_idf, fitted_coef
+    with open('critwords_olr_model.csv', mode='r') as file:
+
+        csv_reader = csv.reader(file)
+        negative = []
+        positive = []
+        for row in csv_reader:
+            negative.append(row[1])
+            positive.append(row[2])
+            
+    return trained_dictionary, trained_idf, fitted_coef, negative, positive
 
 # Load the data
-trained_dictionary, trained_idf, fitted_coef = load_data()
+trained_dictionary, trained_idf, fitted_coef, negative, positive = load_data()
 
 def clean_text(text):
     """
@@ -110,36 +116,47 @@ def clean_text(text):
 
 def predict_severity(text):
     cvt = CountVectorizer(ngram_range=(1, 4), vocabulary = trained_dictionary)
-    Ystar = normalize(cvt.transform(pd.Series(clean_text(text))).multiply(trained_idf), norm = 'l2', axis = 1).dot(fitted_coef)
+    fitted_tfidf = normalize(cvt.transform(pd.Series(clean_text(text))).multiply(trained_idf), norm = 'l2', axis = 1)
     
-    return Ystar[0]
+    nz = [trained_dictionary[i] for i in fitted_tfidf.nonzero()[1]]
+    
+    neg_words = ', '.join([x for x in nz if x in negative])
+    pos_words = ', '.join([x for x in nz if x in positive])
+    
+    Ystar = fitted_tfidf.dot(fitted_coef)
+    
+    return Ystar[0], neg_words, pos_words
 
 # Create the Streamlit app
 def main():
     # Set the title and description of the app
-    st.title('Text Severity Predictor')
-    st.write('Enter some text below to predict the severity')
+    st.title('Severity Calculator')
+    st.write('Please enter the patient safety event report below to predict the severity')
 
     # Create a text box for user input
-    user_input = st.text_input('Enter text here')
+    user_input = st.text_area('Enter text here', label_visibility = "collapsed")
 
     # Create a button to trigger the prediction
     #if st.button('Find Severity'):
         # If the user has entered some text, run the prediction function
     if user_input:
-        prediction = predict_severity(user_input)
+        prediction, neg_words, pos_words = predict_severity(user_input)
         
-        # 1.83072462 11.33662054 for olr_model
+        # 1.83072462, 11.33662054 for olr_model
         if prediction < 1.83072462:
-            category = 'Malfunction'
+            category = f"<span style='color: green'>Malfunction.</span>"
         elif prediction < 11.33662054:
-            category = 'Injury'
+            category = f"<span style='color: #FFC300'>Injury.</span>"
         else:
-            category = 'Death'
+            category = f"<span style='color: red'>Death.</span>"
         
         # Display the predicted severity
-        st.write('Predicted Severity:', prediction)
-        st.write('Category:', category)
+        st.write('The predicted severity score is ', round(prediction, 2),
+                 '. The event is categorized as ', category, unsafe_allow_html=True)
+        
+        st.header('Critical phrases')
+        st.write(':green[Negative: ]', neg_words, unsafe_allow_html=True)
+        st.write(':red[Positive: ]', pos_words, unsafe_allow_html=True)
         
 # Run the app
 if __name__ == "__main__":
