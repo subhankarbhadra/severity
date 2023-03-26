@@ -12,7 +12,7 @@ import streamlit as st
 import csv
 import pickle
 #import nltk
-from sklearn.model_selection import train_test_split
+#from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.preprocessing import normalize
 
@@ -114,6 +114,19 @@ def predict_severity(text):
 
 # Create the Streamlit app
 def main():
+    # Define the CSS style
+    st.markdown("""
+    <style>
+        body {
+            font-size: 15px;
+            }
+        p {
+            font-size: 17px;
+            }
+    /* Add more styles for other elements as needed */
+    </style>
+    """, unsafe_allow_html=True)
+    
     # Set the title and description of the app
     st.title('Severity Calculator')
     st.write('Please enter the patient safety event report below to predict the severity')
@@ -139,6 +152,12 @@ def main():
         st.write('The predicted severity score is ', round(prediction, 2),
                  '. The event is categorized as ', category, unsafe_allow_html=True)
         
+        ax = pickle.load(open("score_plot.pickle", "rb"))
+        ax.axvline(x=prediction, color='blue')
+        st.pyplot(ax.figure)
+        
+        st.write('This is a category-wise density plot of the estimated severity scores of approx. 7.7 million reports from the MAUDE database. The black vertical lines separate the three severity levels: Malfunction, Injury, and Death. The blue vertical line represents the severity score of the report provided.') 
+                
         st.header('Critical phrases')
         st.write(':green[Negative: ]', neg_words, unsafe_allow_html=True)
         st.write(':red[Positive: ]', pos_words, unsafe_allow_html=True)
