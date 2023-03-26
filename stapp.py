@@ -140,6 +140,7 @@ def main():
         # Display the predicted severity
         st.write('Predicted Severity:', prediction)
         st.write('Category:', category)
+        st.write("This is <span style='color: yellow'>yellow</span> text!")
         
 # Run the app
 if __name__ == "__main__":
