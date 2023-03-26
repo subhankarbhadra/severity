@@ -128,10 +128,11 @@ def main():
         # If the user has entered some text, run the prediction function
     if user_input:
         prediction = predict_severity(user_input)
-
-        if prediction < 1.40266175:
+        
+        # 1.83072462 11.33662054 for olr_model
+        if prediction < 1.83072462:
             category = 'Malfunction'
-        elif prediction < 9.32661975:
+        elif prediction < 11.33662054:
             category = 'Injury'
         else:
             category = 'Death'
