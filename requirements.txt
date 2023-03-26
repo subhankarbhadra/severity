@@ -5,3 +5,4 @@ nltk
 scikit-learn
 bs4
 lxml
+matplotlib
