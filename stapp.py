@@ -11,7 +11,7 @@ import streamlit as st
 
 import csv
 import pickle
-import matplotlib
+import matplotlib.axes._subplots
 #import nltk
 #from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
