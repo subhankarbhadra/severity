@@ -159,8 +159,8 @@ def main():
         
         # Display the predicted severity
         st.write('The predicted severity score of the input report is ', round(prediction, 2),
-                 'and it is categorized as ', category, 'The severity score is higher than ', mperc, '% of malfunction events, ',
-                 iperc, '% of injury events, and ', dperc, '% of death events from the MAUDE database.', unsafe_allow_html=True)
+                 'and it is categorized as ', category, 'The severity score is higher than ', str(mperc), '% of malfunction events, ',
+                 str(iperc), '% of injury events, and ', str(dperc), '% of death events from the MAUDE database.', unsafe_allow_html=True)
         
         ax = pickle.load(open("score_plot.pickle", "rb"))
         ax.axvline(x=prediction, color='blue')
