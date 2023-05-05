@@ -73,11 +73,12 @@ def load_data():
     critwords = pd.read_csv('critwords_olr_model.csv')
     negative = critwords['negative'].tolist()
     positive = critwords['positive'].tolist()
-            
-    return trained_dictionary, trained_idf, fitted_coef, negative, positive
+    
+    quantiles = pd.read_csv("severity_quantiles.csv")
+    return trained_dictionary, trained_idf, fitted_coef, negative, positive, quantiles
 
 # Load the data
-trained_dictionary, trained_idf, fitted_coef, negative, positive = load_data()
+trained_dictionary, trained_idf, fitted_coef, negative, positive, quantiles = load_data()
 
 def clean_text(text):
     """
@@ -141,20 +142,25 @@ def main():
     if user_input:
         prediction, neg_words, pos_words = predict_severity(user_input)
         
+        mperc = np.mean(prediction > quantiles['mquant'])*100
+        iperc = np.mean(prediction > quantiles['iquant'])*100
+        dperc = np.mean(prediction > quantiles['dquant'])*100
+        
         # 1.83072462, 11.33662054 for olr_model
         if prediction < 1.83072462:
             category = f"<span style='color: green'>Malfunction.</span>"
-            description = "If the score was greater than 1.83, it would have been categorized as Injury."
+        #    description = "If the score was greater than 1.83, it would have been categorized as Injury."
         elif prediction < 11.33662054:
             category = f"<span style='color: #FFC300'>Injury.</span>"
-            description = "If the score was less than 1.83, it would have been categorized as Malfunction, and if the score was greater than 11.33, it would have been categorized as Death."
+        #    description = "If the score was less than 1.83, it would have been categorized as Malfunction, and if the score was greater than 11.33, it would have been categorized as Death."
         else:
             category = f"<span style='color: red'>Death.</span>"
-            description = "If the score was less than 11.33, it would have been categorized as Injury."
+        #    description = "If the score was less than 11.33, it would have been categorized as Injury."
         
         # Display the predicted severity
         st.write('The predicted severity score of the input report is ', round(prediction, 2),
-                 'and it is categorized as ', category, description, unsafe_allow_html=True)
+                 'and it is categorized as ', category, 'The severity score is higher than ', mperc, '% of malfunction events, ',
+                 iperc, '% of injury events, and ', dperc, '% of death events from the MAUDE database.', unsafe_allow_html=True)
         
         ax = pickle.load(open("score_plot.pickle", "rb"))
         ax.axvline(x=prediction, color='blue')
