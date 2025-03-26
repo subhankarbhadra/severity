@@ -164,7 +164,7 @@ def main():
                  str(round(iperc, 1)), '% of injury events, and ', str(round(dperc, 1)), '% of death events from the MAUDE database.', unsafe_allow_html=True)
         
         fig, ax = plt.subplots()
-        with open("score_plot.pickle", "wb") as f:
+        with open("score_plot.pickle", "rb") as f:
           pickle.dump(ax, f)
         #ax = pickle.load(open("score_plot.pickle", "rb"))
         ax.axvline(x=prediction, color='blue')
