@@ -170,7 +170,7 @@ def main():
         st.write('This is a category-wise density plot of the estimated severity scores of approx. 7.7 million reports from the MAUDE database. The blue vertical line represents the severity score of the report provided.') 
                 
         st.header('Critical terms')
-        st.write("Critical terms are n-grams with a high coefficient value (in magnitude) in the trained OLR model. If the fitted coefficient is negative, the critical phrase is called a 'negative' critical phrase and vice versa. The critical phrases that appeared in the (pre-processed) input report are listed below.")
+        st.write("Critical terms are key phrases that have a significant impact on predicting the severity of reports. The presence of positive critical terms implies a harmful outcome is associated with the event, whereas the presence of negative critical terms indicates that there was no adverse outcome.")
         st.write(':green[Negative: ]', neg_words, unsafe_allow_html=True)
         st.write(':red[Positive: ]', pos_words, unsafe_allow_html=True)
         
