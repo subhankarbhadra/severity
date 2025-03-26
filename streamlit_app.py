@@ -157,9 +157,8 @@ def main():
             category = f"<span style='color: red'>Death.</span>"
         #    description = "If the score was less than 11.33, it would have been categorized as Injury."
 
-        mvr = matplotlib.__version__
         # Display the predicted severity
-        st.write('The predicted severity score of the input report is ', mvr, round(prediction, 2),
+        st.write('The predicted severity score of the input report is ', round(prediction, 2),
                  'and it is categorized as ', category, 'The severity score is higher than ', str(round(mperc, 1)), '% of malfunction events, ',
                  str(round(iperc, 1)), '% of injury events, and ', str(round(dperc, 1)), '% of death events from the MAUDE database.', unsafe_allow_html=True)
         
