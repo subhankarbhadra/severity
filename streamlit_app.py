@@ -162,7 +162,9 @@ def main():
                  'and it is categorized as ', category, 'The severity score is higher than ', str(round(mperc, 1)), '% of malfunction events, ',
                  str(round(iperc, 1)), '% of injury events, and ', str(round(dperc, 1)), '% of death events from the MAUDE database.', unsafe_allow_html=True)
         
-        ax = pickle.load(open("score_plot.pickle", "rb"))
+        with open("score_plot.pickle", "wb") as f:
+          pickle.dump(ax, f)
+        #ax = pickle.load(open("score_plot.pickle", "rb"))
         ax.axvline(x=prediction, color='blue')
         st.pyplot(ax.figure)
         
