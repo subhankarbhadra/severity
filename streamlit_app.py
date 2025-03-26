@@ -165,7 +165,7 @@ def main():
         
         fig, ax = plt.subplots()
         with open("score_plot.pickle", "rb") as f:
-          pickle.dump(ax, f)
+          ax = pickle.load(f)
         #ax = pickle.load(open("score_plot.pickle", "rb"))
         ax.axvline(x=prediction, color='blue')
         st.pyplot(ax.figure)
