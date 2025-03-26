@@ -1,6 +1,6 @@
 numpy
 pandas
-matplotlib==3.6.3
+matplotlib
 streamlit
 nltk
 scikit-learn
