@@ -9,4 +9,4 @@ dependencies:
   - lxml
   - pip
   - pip:
-    - matplotlib
+    - matplotlib==3.6.3
