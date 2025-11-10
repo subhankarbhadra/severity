@@ -1,15 +1,11 @@
 name: stats
-channels:
-  - conda-forge    # ← THIS IS THE MISSING LINE
-  - defaults
 dependencies:
   - numpy
   - pandas
   - streamlit
   - nltk
+  - matplotlib==3.10.0
   - scikit-learn
   - beautifulsoup4
   - lxml
   - pip
-  - pip:
-      - matplotlib==3.10.0
