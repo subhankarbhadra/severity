@@ -1,4 +1,7 @@
 name: stats
+channels:
+  - conda-forge    # ← THIS IS THE MISSING LINE
+  - defaults
 dependencies:
   - numpy
   - pandas
