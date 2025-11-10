@@ -5,8 +5,8 @@ dependencies:
   - streamlit
   - nltk
   - scikit-learn
-  - bs4
+  - beautifulsoup4
   - lxml
   - pip
   - pip:
-      - matplotlib>=3.7.0
+      - matplotlib==3.10.0
