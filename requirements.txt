@@ -1,8 +1,0 @@
-numpy
-pandas
-matplotlib==3.10.0
-streamlit
-nltk
-scikit-learn
-beautifulsoup4
-lxml
